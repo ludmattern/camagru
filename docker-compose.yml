@@ -1,0 +1,65 @@
+services:
+  web:
+    build: .
+    container_name: camagru_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./uploads:/var/www/html/uploads
+      - ./filters:/var/www/html/filters
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=camagru
+      - DB_USER=camagru_user
+      - DB_PASSWORD=camagru_password
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_FROM=${MAIL_FROM}
+      - APP_URL=${APP_URL:-http://localhost:8080}
+    networks:
+      - camagru_network
+
+  db:
+    image: mysql:8.0
+    container_name: camagru_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: camagru
+      MYSQL_USER: camagru_user
+      MYSQL_PASSWORD: camagru_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+    networks:
+      - camagru_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: camagru_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: camagru_user
+      PMA_PASSWORD: camagru_password
+    depends_on:
+      - db
+    networks:
+      - camagru_network
+
+volumes:
+  db_data:
+
+
+networks:
+  camagru_network:
+    driver: bridge

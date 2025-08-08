@@ -1,3 +1,52 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules/
+vendor/
+
+# Upload directories
+uploads/*
+!uploads/.gitkeep
+
+# Log files
+logs/
+*.log
+
+# Database
+*.sqlite
+*.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Build files
+dist/
+build/
+
+# Docker volumes
+docker-compose.override.yml
+
 # Cache and logs (Symfony2)
 /app/cache/*
 /app/logs/*
